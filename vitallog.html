@@ -248,8 +248,8 @@ header::after{content:'';position:absolute;bottom:-1px;left:0;width:80px;height:
       <h2>Log Blood Sugar</h2>
       <div class="input-row">
         <div class="field">
-          <label>Level (mmol/L)</label>
-          <input type="number" id="sLevel" step="0.1" min="1" max="40" placeholder="5.5">
+          <label>Level (mg/dL)</label>
+          <input type="number" id="sLevel" step="1" min="50" max="600" placeholder="130">
         </div>
         <div class="field">
           <label>Date &amp; Time</label>
@@ -403,7 +403,7 @@ async function submitEntry(type) {
   const dt    = dtEl.value;
 
   if (isW && (isNaN(val)||val<20||val>300)) { toast('Enter a valid weight (20–300 kg)','error'); return; }
-  if (!isW && (isNaN(val)||val<1||val>40))  { toast('Enter a valid level (1–40 mmol/L)','error'); return; }
+  if (!isW && (isNaN(val)||val<50||val>600))  { toast('Enter a valid level (50–600 mg/dL)','error'); return; }
   if (!dt) { toast('Select a date and time','error'); return; }
   if (!S.url) { toast('Connect Google Sheets in Settings first','error'); openSettings(); return; }
 
@@ -504,9 +504,9 @@ function renderSugarChart() {
   sChart.update('active');
   if (s.length) {
     const cur=s[s.length-1].value, avg=s.reduce((a,b)=>a+b.value,0)/s.length, max=Math.max(...s.map(d=>d.value));
-    document.getElementById('sCur').textContent = cur.toFixed(1)+' mmol/L';
-    document.getElementById('sAvg').textContent = avg.toFixed(1)+' mmol/L';
-    document.getElementById('sMax').textContent = max.toFixed(1)+' mmol/L';
+    document.getElementById('sCur').textContent = Math.round(cur)+' mg/dL';
+    document.getElementById('sAvg').textContent = Math.round(avg)+' mg/dL';
+    document.getElementById('sMax').textContent = Math.round(max)+' mg/dL';
   }
 }
 
@@ -528,9 +528,9 @@ function renderSugarList() {
   if (!data.length) { el.innerHTML='<div class="no-data"><div class="no-data-icon">&#129656;</div>No entries yet</div>'; return; }
   el.innerHTML=data.map((d,i)=>{
     const prev=data[i+1], delta=prev?d.value-prev.value:null;
-    const tag=delta!==null?'<span class="dtag '+(delta>0?'pos':delta<0?'neg':'neu')+'">'+(delta>0?'+':'')+delta.toFixed(1)+'</span>':'<span class="dtag neu">first</span>';
-    const color=d.value>7.8?'#ff6b6b':d.value<4?'#ffd700':'var(--as)';
-    return '<div class="entry-item"><div class="entry-left"><span class="entry-index">'+(i+1)+'</span><span class="entry-date">'+fmtDate(d.datetime)+'</span></div><div style="display:flex;align-items:center;gap:12px">'+tag+'<span class="entry-val s" style="color:'+color+'">'+d.value.toFixed(1)+'<span class="entry-unit">mmol/L</span></span></div></div>';
+    const tag=delta!==null?'<span class="dtag '+(delta>0?'pos':delta<0?'neg':'neu')+'">'+(delta>0?'+':'')+Math.round(delta)+'</span>':'<span class="dtag neu">first</span>';
+    const color=d.value>180?'#ff6b6b':d.value<70?'#ffd700':'var(--as)';
+    return '<div class="entry-item"><div class="entry-left"><span class="entry-index">'+(i+1)+'</span><span class="entry-date">'+fmtDate(d.datetime)+'</span></div><div style="display:flex;align-items:center;gap:12px">'+tag+'<span class="entry-val s" style="color:'+color+'">'+d.value.toFixed(1)+'<span class="entry-unit">mg/dL</span></span></div></div>';
   }).join('');
 }
 
