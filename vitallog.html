@@ -432,11 +432,11 @@ async function loadAll() {
   try {
     const wr = await jsonp({action:'get', type:'weight'});
     if (wr&&wr.data) { S.weight.data=[...wr.data].reverse(); renderWeightChart(); renderWeightList(); }
-  } catch(e) { toast('Could not load weight data','error'); }
+  } catch(e) { toast('Weight: ' + e.message, 'error'); console.error('Weight load error:', e); }
   try {
     const sr = await jsonp({action:'get', type:'sugar'});
     if (sr&&sr.data) { S.sugar.data=[...sr.data].reverse(); renderSugarChart(); renderSugarList(); }
-  } catch(e) { toast('Could not load sugar data','error'); }
+  } catch(e) { toast('Sugar: ' + e.message, 'error'); console.error('Sugar load error:', e); }
 }
 
 // ── RANGE ────────────────────────────────────────────────
