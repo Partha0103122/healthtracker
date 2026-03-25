@@ -372,33 +372,26 @@ function switchTab(tab) {
   document.querySelector('[data-section="'+tab+'"]').classList.add('active');
 }
 
-// ── JSONP ────────────────────────────────────────────────
-// Use fetch with no-cors for writes, and iframe trick for reads
+// ── API via corsproxy.io ─────────────────────────────────
+function proxyUrl(url) {
+  return 'https://corsproxy.io/?' + encodeURIComponent(url);
+}
+
 async function apiGet(params) {
-  // Google Apps Script supports CORS when deployed as web app — 
-  // use fetch directly, the script sets JSON mime type
   const qs = new URLSearchParams(params).toString();
-  const res = await fetch(S.url + '?' + qs, {
-    method: 'GET',
-    redirect: 'follow'
-  });
-  const text = await res.text();
-  // Handle case where response is wrapped in HTML (redirect issue)
-  const match = text.match(/\{.*\}/s);
-  if (match) return JSON.parse(match[0]);
-  return JSON.parse(text);
+  const res = await fetch(proxyUrl(S.url + '?' + qs));
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return await res.json();
 }
 
 async function apiPost(params) {
-  const res = await fetch(S.url, {
+  const res = await fetch(proxyUrl(S.url), {
     method: 'POST',
-    body: JSON.stringify(params),
-    redirect: 'follow'
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(params)
   });
-  const text = await res.text();
-  const match = text.match(/\{.*\}/s);
-  if (match) return JSON.parse(match[0]);
-  return JSON.parse(text);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return await res.json();
 }
 
 // ── SUBMIT ───────────────────────────────────────────────
