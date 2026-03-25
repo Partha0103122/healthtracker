@@ -123,7 +123,7 @@ header::after{content:'';position:absolute;bottom:-1px;left:0;width:80px;height:
 .stat-label{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
 .stat-val{font-family:var(--mono);font-size:22px;font-weight:500}
 .stat-val.w{color:var(--aw)}.stat-val.s{color:var(--as)}
-.chart-wrap{position:relative;height:220px}
+.chart-wrap{position:relative;height:260px}@media(max-width:640px){.chart-wrap{height:220px}}
 
 /* RECENT */
 .recent-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:28px;margin-bottom:16px}
@@ -472,8 +472,8 @@ function baseOpts() {
       tooltip:{backgroundColor:'#18181f',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,titleColor:'#6b6b80',bodyColor:'#f0f0f5',titleFont:{family:'DM Mono',size:11},bodyFont:{family:'DM Mono',size:14,weight:'500'},padding:12,cornerRadius:10}
     },
     scales:{
-      x:{type:'time',ticks:{color:'#6b6b80',font:{family:'DM Mono',size:10},maxTicksLimit:6},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}},
-      y:{ticks:{color:'#6b6b80',font:{family:'DM Mono',size:10},maxTicksLimit:5},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}}
+      x:{type:'time',ticks:{color:'#6b6b80',font:{family:'DM Mono',size:9},maxTicksLimit:4,maxRotation:0},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}},
+      y:{position:'right',ticks:{color:'#6b6b80',font:{family:'DM Mono',size:9},maxTicksLimit:4,maxRotation:0,callback:function(v){return v;}},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}}
     }
   };
 }
